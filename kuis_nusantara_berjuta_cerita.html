@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#176b57">
+<title>Kuis Nusantara Berjuta Cerita - Kelas VI</title>
+<style>
+:root{color-scheme:light;--green:#176b57;--pale:#e8f5ef;--ink:#172b26;--muted:#60736d;--line:#d7e3de}
+*{box-sizing:border-box}body{margin:0;background:#f3f7f5;color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{max-width:680px;margin:auto;padding:16px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 5px 20px #153b2d0b}
+header{background:var(--green);color:white;border-radius:18px;padding:22px;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85}h1{font-size:1.55rem;line-height:1.2;margin:.35rem 0 .5rem}h2{font-size:1.2rem;line-height:1.4}.sub{margin:0;color:#e2f4ed}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.muted{color:var(--muted);font-size:.9rem}.track{height:7px;background:#e4ece8;border-radius:99px;overflow:hidden;margin:12px 0 22px}.bar{height:100%;background:var(--green);width:0;transition:width .2s}
+.answers{display:grid;gap:10px;margin:18px 0}.answer{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:13px;border:1px solid var(--line);background:white;border-radius:12px;color:var(--ink);font:inherit;cursor:pointer}.letter{flex:0 0 30px;height:30px;border-radius:8px;background:#edf3f0;display:grid;place-items:center;font-weight:700}.answer:focus-visible,button:focus-visible{outline:3px solid #8ac9b5;outline-offset:2px}.answer.correct{border-color:#20835d;background:#e8f7ef}.answer.wrong{border-color:#c74444;background:#fff0f0}.feedback{padding:13px;border-radius:12px;background:#f0f4f2;margin:12px 0}.feedback strong{display:block;margin-bottom:4px}
+button.primary,button.secondary{border:0;border-radius:12px;padding:13px 16px;font:inherit;font-weight:700;cursor:pointer}button.primary{background:var(--green);color:white;width:100%}button.secondary{background:white;color:var(--green);border:1px solid var(--green);width:100%;margin-top:10px}
+button:disabled{cursor:default;opacity:.85}.hidden{display:none}.score{font-size:2.5rem;color:var(--green);font-weight:800;line-height:1.2}.review-item{padding:12px 0;border-bottom:1px solid var(--line)}footer{text-align:center;color:var(--muted);font-size:.8rem;padding:18px}
+@media(max-width:420px){main{padding:10px}.card{padding:16px}header{padding:18px}h1{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="eyebrow">Latihan PJJ • Bahasa Indonesia • Kelas VI SD/MI</div><h1>Nusantara Berjuta Cerita</h1><p class="sub">25 soal pilihan ganda • Cerita rakyat, nilai-nilai, denotasi, dan konotasi.</p></header>
+<section class="card" id="quiz">
+<div class="row"><span class="muted" id="progressText">Soal 1 dari 25</span><strong id="scoreText">Skor: 0</strong></div>
+<div class="track"><div class="bar" id="bar"></div></div>
+<h2 id="question"></h2>
+<div class="answers" id="answers"></div>
+<div class="feedback hidden" id="feedback" aria-live="polite"></div>
+<button class="primary" id="next" disabled>Periksa jawaban</button>
+</section>
+<section class="card hidden" id="result">
+<div class="eyebrow">Kuis selesai</div><h2>Hasil latihanmu</h2><div class="score" id="finalScore">0/100</div><p id="resultText"></p>
+<button class="primary" id="reviewBtn">Lihat kunci jawaban</button><button class="secondary" id="restart">Main lagi</button>
+<div id="review" class="hidden"></div>
+</section>
+<footer>Belajar cerita Nusantara dengan jujur dan semangat 🌿</footer>
+</main>
+<script>
+const questions = [
+{q:"Apa yang dimaksud dengan cerita rakyat?",o:["Cerita yang hanya ditulis oleh penulis modern","Cerita yang berkembang dan diwariskan secara turun-temurun dalam masyarakat","Berita tentang peristiwa hari ini","Cerita yang selalu berdasarkan penelitian ilmiah"],a:1,e:"Cerita rakyat diwariskan dari generasi ke generasi, awalnya banyak disampaikan secara lisan."},
+{q:"Manakah yang termasuk cerita rakyat Nusantara?",o:["Malin Kundang","Laporan cuaca","Petunjuk penggunaan komputer","Berita olahraga"],a:0,e:"Malin Kundang merupakan cerita rakyat yang terkenal dari Sumatra Barat."},
+{q:"Cerita Danau Toba berasal dari daerah ....",o:["Jawa Barat","Bali","Sumatra Utara","Kalimantan Timur"],a:2,e:"Legenda Danau Toba berkaitan dengan Sumatra Utara."},
+{q:"Tokoh utama dalam cerita adalah ....",o:["Tokoh yang selalu jahat","Tokoh yang paling banyak berperan dalam cerita","Orang yang membaca cerita","Penulis buku cerita"],a:1,e:"Tokoh utama menjadi pusat peristiwa dalam cerita."},
+{q:"Tempat, waktu, dan suasana dalam cerita disebut ....",o:["Amanat","Tema","Alur","Latar"],a:3,e:"Latar mencakup tempat, waktu, dan suasana terjadinya peristiwa."},
+{q:"Pesan yang ingin disampaikan pengarang kepada pembaca disebut ....",o:["Amanat","Tokoh","Latar","Konflik"],a:0,e:"Amanat adalah pesan atau pelajaran yang dapat diambil dari cerita."},
+{q:"Dalam cerita Malin Kundang, Malin tidak mengakui ibunya. Perilaku tersebut menunjukkan sikap ....",o:["Rendah hati","Berbakti","Durhaka","Tanggung jawab"],a:2,e:"Tidak mengakui ibu merupakan tindakan durhaka kepada orang tua."},
+{q:"Nilai moral dalam cerita rakyat berkaitan dengan ....",o:["Cara membuat buku","Baik dan buruknya perilaku","Jumlah halaman cerita","Nama penerbit"],a:1,e:"Nilai moral mengajarkan perilaku yang baik dan menghindari perilaku buruk."},
+{q:"Menghormati orang tua merupakan contoh nilai ....",o:["Kesombongan","Persaingan","Kecerobohan","Moral"],a:3,e:"Menghormati orang tua adalah contoh nilai moral yang baik."},
+{q:"Cerita rakyat yang menjelaskan asal-usul suatu tempat disebut ....",o:["Legenda","Puisi","Berita","Iklan"],a:0,e:"Legenda adalah cerita rakyat yang berkaitan dengan asal-usul tempat atau kejadian tertentu."},
+{q:"Salah satu manfaat membaca cerita rakyat adalah ....",o:["Melupakan budaya sendiri","Mengetahui nilai budaya dan pelajaran hidup","Menghindari semua cerita daerah","Menghafal semua nama penerbit"],a:1,e:"Cerita rakyat membantu kita mengenal budaya dan mengambil pelajaran hidup."},
+{q:"Jika tokoh menolong orang yang kesusahan, nilai yang ditunjukkan adalah ....",o:["Iri hati","Keserakahan","Kepedulian","Keangkuhan"],a:2,e:"Menolong orang lain menunjukkan kepedulian dan sikap suka membantu."},
+{q:"Makna denotatif adalah makna kata yang ....",o:["Sebenarnya atau sesuai arti langsung","Selalu berupa sindiran","Hanya digunakan dalam puisi","Bertentangan dengan arti sebenarnya"],a:0,e:"Makna denotatif adalah makna sebenarnya, seperti arti dalam kamus."},
+{q:"Makna konotatif adalah makna kata yang ....",o:["Selalu menunjukkan ukuran","Tidak memiliki arti","Hanya digunakan dalam percakapan resmi","Memiliki makna tambahan atau kiasan"],a:3,e:"Makna konotatif mengandung nilai rasa atau makna kiasan."},
+{q:"Kalimat yang menggunakan makna denotatif adalah ....",o:["Rina menjadi bintang kelas","Ayah membeli kambing di pasar","Doni panjang tangan","Ibu menjadi tulang punggung keluarga"],a:1,e:"Kalimat tersebut menyatakan kegiatan membeli kambing secara langsung."},
+{q:"Ungkapan 'buah tangan' memiliki makna konotatif berupa ....",o:["Buah yang dipetik dengan tangan","Tangan yang terluka","Oleh-oleh","Buah yang jatuh"],a:2,e:"Buah tangan berarti oleh-oleh yang dibawa setelah bepergian."},
+{q:"Arti ungkapan 'panjang tangan' adalah ....",o:["Suka mencuri","Rajin bekerja","Suka menolong","Bertubuh tinggi"],a:0,e:"Panjang tangan merupakan ungkapan untuk orang yang suka mencuri."},
+{q:"Kalimat 'Adik makan buah mangga' menggunakan makna ....",o:["Kiasan","Konotatif","Sindiran","Denotatif"],a:3,e:"Mangga dalam kalimat itu berarti buah mangga yang sebenarnya."},
+{q:"Makna ungkapan 'rendah hati' adalah ....",o:["Memiliki tubuh pendek","Tidak sombong","Mudah marah","Tidak percaya diri"],a:1,e:"Rendah hati berarti tidak menyombongkan diri."},
+{q:"Kalimat 'Ia menjadi tangan kanan kepala sekolah' berarti ....",o:["Ia kehilangan tangan kanannya","Ia berdiri di sebelah kanan","Ia menjadi orang kepercayaan kepala sekolah","Ia sedang sakit tangan"],a:2,e:"Tangan kanan adalah ungkapan untuk orang kepercayaan."},
+{q:"Mengapa cerita rakyat perlu dilestarikan?",o:["Agar tidak ada cerita baru","Agar hanya orang dewasa yang membacanya","Agar cerita daerah dilupakan","Agar warisan budaya tetap dikenal generasi berikutnya"],a:3,e:"Pelestarian cerita rakyat membantu menjaga warisan budaya Nusantara."},
+{q:"Jika seorang tokoh mengakui kesalahan dan meminta maaf, sikap yang ditunjukkan adalah ....",o:["Kejujuran dan tanggung jawab","Keserakahan","Kecurangan","Keangkuhan"],a:0,e:"Mengakui kesalahan merupakan bentuk kejujuran dan tanggung jawab."},
+{q:"Urutan peristiwa yang membentuk jalannya cerita disebut ....",o:["Latar","Alur","Amanat","Watak"],a:1,e:"Alur adalah rangkaian peristiwa dalam sebuah cerita."},
+{q:"Sikap yang tepat setelah membaca cerita rakyat dari daerah lain adalah ....",o:["Mengejek kebudayaannya","Menganggap budaya sendiri paling baik","Menghargai perbedaan budaya","Menolak mempelajarinya"],a:2,e:"Cerita rakyat mengajarkan kita untuk menghormati keberagaman budaya."},
+{q:"Kalimat 'Siti menjadi bintang kelas' bermakna ....",o:["Siti berubah menjadi bintang di langit","Siti sedang melihat bintang","Siti bekerja di planetarium","Siti menjadi siswa yang berprestasi"],a:3,e:"Bintang kelas merupakan ungkapan bagi siswa yang berprestasi."}
+];
+let index=0, selected=null, score=0, answers=[];
+const $=id=>document.getElementById(id);
+function render(){
+ const q=questions[index]; selected=null;
+ $("progressText").textContent=`Soal ${index+1} dari ${questions.length}`;
+ $("scoreText").textContent=`Skor: ${score*4}`;
+ $("bar").style.width=`${(index/questions.length)*100}%`;
+ $("question").textContent=q.q; $("answers").innerHTML="";
+ $("feedback").classList.add("hidden"); $("feedback").textContent="";
+ q.o.forEach((opt,i)=>{const b=document.createElement("button");b.className="answer";
+ const letter=document.createElement("span");letter.className="letter";letter.textContent="ABCD"[i];
+ const text=document.createElement("span");text.textContent=opt;b.append(letter,text);
+ b.addEventListener("click",()=>choose(i));$("answers").append(b)});
+ $("next").disabled=true;$("next").textContent="Periksa jawaban";
+}
+function choose(i){
+ if(selected!==null)return;selected=i;const q=questions[index];answers[index]=i;
+ if(i===q.a)score++;
+ [...$("answers").children].forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add("correct");else if(j===i)b.classList.add("wrong")});
+ $("scoreText").textContent=`Skor: ${score*4}`;
+ $("feedback").classList.remove("hidden");
+ $("feedback").innerHTML=`<strong>${i===q.a?"Benar! Hebat!":"Belum tepat, tetap semangat!"}</strong><div>Jawaban: ${"ABCD"[q.a]}. ${q.o[q.a]}</div><div style="margin-top:6px">${q.e}</div>`;
+ $("next").disabled=false;$("next").textContent=index===questions.length-1?"Lihat hasil":"Soal berikutnya";
+}
+$("next").addEventListener("click",()=>{if(selected===null)return;if(index<questions.length-1){index++;render()}else finish()});
+function finish(){
+ $("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("bar").style.width="100%";
+ $("finalScore").textContent=`${score*4}/100`;
+ $("resultText").textContent=score>=22?"Luar biasa! Kamu sangat memahami materi.":score>=18?"Bagus! Terus tingkatkan pemahamanmu.":score>=13?"Cukup baik! Pelajari kembali materi yang belum dikuasai.":"Tetap semangat! Pelajari kembali materi, lalu coba lagi.";
+ $("review").classList.add("hidden");$("reviewBtn").textContent="Lihat kunci jawaban";
+ $("review").innerHTML=questions.map((q,i)=>`<div class="review-item"><strong>${i+1}. ${q.q}</strong><div style="color:#176b57;margin-top:4px">${"ABCD"[q.a]}. ${q.o[q.a]}</div><div class="muted">${q.e}</div></div>`).join("");
+}
+$("reviewBtn").addEventListener("click",()=>{const r=$("review");r.classList.toggle("hidden");$("reviewBtn").textContent=r.classList.contains("hidden")?"Lihat kunci jawaban":"Tutup kunci jawaban"});
+$("restart").addEventListener("click",()=>{index=0;selected=null;score=0;answers=[];$("result").classList.add("hidden");$("quiz").classList.remove("hidden");render()});
+render();
+</script>
+</body>
+</html>
